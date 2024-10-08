@@ -89,4 +89,4 @@ El repositorio está organizado por materias de la siguiente manera:
 
 Si tienes alguna pregunta o sugerencia, no dudes en ponerte en contacto con [armando.meabe@gmail.com](mailto:armando.meabe@gmail.com).
 
-¡Feliz programación y diseño de videojuegos!
+¡Happy coding!
