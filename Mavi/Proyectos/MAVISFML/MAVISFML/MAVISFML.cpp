@@ -1,7 +1,7 @@
 //////Bibliotecas//////
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-///Punto de entrada a la aplicación///
+///Punto de entrada a la aplicación 2 ///
 
 
 int main() {
