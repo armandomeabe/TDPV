@@ -10,8 +10,9 @@ Sprite sprite1, sprite2, sprite3, sprite4;
 
 ///Punto de entrada a la aplicación///
 int main() {
+	// SNIPER (ACTIVIDAD 1)
 	//Cargamos la textura del archivo
-	texture.loadFromFile("D:\\Developer\\FICH\\TDPV\\Mavi\\Ejercicios\\UnidadIII\\MAVISFML\\res\\rcircle.png");
+	texture.loadFromFile("D:\\Developer\\FICH\\TDPV\\Mavi\\Ejercicios\\res\\rcircle.png");
 	
 	// Cargamos el material de cada sprite y le damos su posición inicial a cada uno
 	// el "magic number" (mala práctica) "128" es porque rcircle.png es de 128x128px
