@@ -6,7 +6,7 @@
 
 int main() {
 	//Creamos la ventana
-	sf::RenderWindow App(sf::VideoMode(800, 600, 32),
+	sf::RenderWindow App(sf::VideoMode(1920, 1080, 32),
 		"Que ventana horrible");
 	// Loop principal
 	while (App.isOpen())
