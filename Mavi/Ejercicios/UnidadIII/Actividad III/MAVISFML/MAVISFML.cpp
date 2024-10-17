@@ -1,53 +1,54 @@
 //////Bibliotecas//////
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace sf;
 
 //////Variables//////
-Texture texture;
-Sprite sprite1, sprite2, sprite3, sprite4;
+Texture textureBackground;
+Sprite spriteBackground;
 
 ///Punto de entrada a la aplicación///
 int main() {
-	// SNIPER (ACTIVIDAD 1)
-	//Cargamos la textura del archivo
-	texture.loadFromFile("D:\\Developer\\FICH\\TDPV\\Mavi\\Ejercicios\\res\\rcircle.png");
-	
-	// Cargamos el material de cada sprite y le damos su posición inicial a cada uno
-	// el "magic number" (mala práctica) "128" es porque rcircle.png es de 128x128px
-	sprite1.setTexture(texture);
-	sprite1.setPosition(0, 0);
+    // Cargamos la textura del archivo de fondo
+    if (!textureBackground.loadFromFile("D:\\Developer\\FICH\\TDPV\\Mavi\\Ejercicios\\res\\fondo.jpg")) {
+        std::cerr << "Error: No se pudo cargar el archivo fondo.jpg" << std::endl;
+        return -1;
+    }
 
-	sprite2.setTexture(texture);
-	sprite2.setPosition((800 - 128), 0);
+    // Creamos la ventana
+    sf::RenderWindow App(sf::VideoMode(800, 600, 32), "Fondo del Videojuego");
 
-	sprite3.setTexture(texture);
-	sprite3.setPosition(0, (600 - 128));
-	
-	sprite4.setTexture(texture);
-	sprite4.setPosition((800 - 128), (600 - 128));
+    // Configuramos el sprite del fondo
+    spriteBackground.setTexture(textureBackground);
 
-	//Creamos la ventana
-	sf::RenderWindow App(sf::VideoMode(800, 600, 32), "Sniper");
+    // Calculamos la escala necesaria para ajustar la imagen al tamaño de la ventana
+    float scaleX = 800.0f / textureBackground.getSize().x;
+    float scaleY = 600.0f / textureBackground.getSize().y;
 
-	bool direction = false;
+    // Aplicamos la escala
+    spriteBackground.setScale(scaleX, scaleY);
 
-	// Loop principal
-	while (App.isOpen())
-	{
-		// Limpiamos la ventana
-		App.clear();
+    // Loop principal
+    while (App.isOpen())
+    {
+        // Procesamos los eventos
+        sf::Event event;
+        while (App.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                App.close();
+        }
 
-		// Dibujamos la escena
-		App.draw(sprite1);
-		App.draw(sprite2);
-		App.draw(sprite3);
-		App.draw(sprite4);
+        // Limpiamos la ventana
+        App.clear();
 
-		// Mostramos la ventana
-		App.display();
-	}
+        // Dibujamos el fondo
+        App.draw(spriteBackground);
 
-	return 0;
+        // Mostramos la ventana
+        App.display();
+    }
+
+    return 0;
 }
