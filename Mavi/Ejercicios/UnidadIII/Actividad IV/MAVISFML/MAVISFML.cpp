@@ -12,13 +12,13 @@ using namespace sf;
 
 //////Variables//////
 Texture texturePlatform;
-std::vector<Sprite> platforms;
+std::vector<Sprite> platforms; // También podía ser un arreglo
 
 ///Punto de entrada a la aplicación///
 int main() {
     // Cargamos la textura del archivo de plataforma
     if (!texturePlatform.loadFromFile("D:\\Developer\\FICH\\TDPV\\Mavi\\Ejercicios\\res\\plataforma.jpg")) {
-        std::cerr << "Error: No se pudo cargar el archivo plataforma.jpg" << std::endl;
+        std::cerr << "Error: No se pudo cargar el archivo plataforma.jpg" << std::endl; // En caso que loadFromFile devuelva false
         return -1;
     }
 
@@ -26,6 +26,7 @@ int main() {
     sf::RenderWindow App(sf::VideoMode(800, 600, 32), "Escenario de Plataformas");
 
     // Datos del gráfico de barras (alturas en píxeles)
+    // El horizontal lo manejo aparte
     std::vector<float> heights = { 100, 150, 200, 250, 300 };
     float barWidth = 50.0f; // Ancho de cada barra
     float gap = 20.0f; // Espacio entre barras, por eso "gap"
@@ -41,12 +42,15 @@ int main() {
         platform.setScale(scaleX, scaleY);
 
         // Posicionar la barra en el gráfico
-        platform.setPosition(i * (barWidth + gap), 600 - heights[i]); // Ajustar la posición Y para que las barras crezcan hacia arriba
+        // Ajustar la posición Y para que las barras crezcan hacia arriba
+        platform.setPosition(i * (barWidth + gap), 600 - heights[i]);
 
+        // Hay que agregarlo al vector de plataformas
         platforms.push_back(platform);
     }
 
     // Agregar una barra horizontal
+    // En realidad podría usar el mismo sprite adentro del for
     Sprite horizontalPlatform;
     horizontalPlatform.setTexture(texturePlatform);
 
@@ -56,7 +60,7 @@ int main() {
     horizontalPlatform.setScale(horizontalScaleX, horizontalScaleY);
 
     // Posicionar la barra horizontal
-    horizontalPlatform.setPosition(400.0f, 300.0f); // Ajustar la posición de la barra horizontal
+    horizontalPlatform.setPosition(400.0f, 300.0f); // Ajustar la posición de la barra horizontal, a ojo :-)
 
     platforms.push_back(horizontalPlatform);
 
