@@ -51,13 +51,14 @@ int main()
                 // Cambiar el tamaño del pincel con las flechas arriba y abajo
                 // este código viene de "yapa" y me ayudó copilot porque no tenía idea
                 if (event.key.code == Keyboard::Up)
-                    brushSize = std::min(brushSize + 1.0f, 50.0f);  // Tamaño máximo de 50
+                    brushSize = std::min(brushSize + 1.0f, 50.0f); // "min" es parte del namespace std y dados dos argumentos elije el mínimo
                 else if (event.key.code == Keyboard::Down)
-                    brushSize = std::max(brushSize - 1.0f, 1.0f);  // Tamaño mínimo de 1
+                    brushSize = std::max(brushSize - 1.0f, 1.0f); // idem pero con máximo
             }
         }
 
         // Dibujar cuando se mantiene presionado el botón izquierdo del mouse
+        // si miramos la teoría de la unidad IV, estamos usando la forma unbuffered
         if (Mouse::isButtonPressed(Mouse::Left))
         {
             CircleShape circle(brushSize);
@@ -70,6 +71,7 @@ int main()
         window.clear(Color::White);
 
         // Dibujar todos los círculos de vuelta
+        // "auto" en C++ es como "var" en C#, sigue siendo fuertemente tipado porque el tipo se determina en tiempo de compilación y no se puede cambiar en runtime
         for (const auto& circle : circles)
             window.draw(circle);
 
