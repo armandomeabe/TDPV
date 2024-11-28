@@ -1,27 +1,31 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include <string>
+#include <SFML/Graphics.hpp>
 
-class Character
-{
+class Character : public sf::Drawable {
 public:
-    Character(float x = 0, float y = 0, const std::string& texturePath = "");
-    virtual ~Character() = default;
+    // Constructor que recibe la textura
+    Character(const sf::Texture& texture);
 
-    // Métodos para obtener y ajustar la posición
-    float getX() const;
-    float getY() const;
+    // Establecer la posición
     void setPosition(float x, float y);
 
-    // Métodos para manejar la textura
-    const std::string& getTexturePath() const;
-    void setTexturePath(const std::string& texturePath);
+    // Obtener la posición del personaje
+    sf::Vector2f getPosition() const;
+
+    // Obtener los límites del sprite para la colisión
+    sf::FloatRect getGlobalBounds() const;
+
+    // Método para obtener el sprite por referencia (no copia)
+    sf::Sprite& getSprite();  // Cambiar a referencia
 
 protected:
-    float posX;                   // Posición X del personaje
-    float posY;                   // Posición Y del personaje
-    std::string texturePath;      // Ruta de la textura asociada
+    // Método para dibujar el sprite
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+private:
+    sf::Sprite sprite;  // El sprite del personaje
 };
 
 #endif // CHARACTER_H

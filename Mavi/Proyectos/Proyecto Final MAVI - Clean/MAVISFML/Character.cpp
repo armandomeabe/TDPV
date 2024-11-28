@@ -1,30 +1,30 @@
 #include "Character.h"
 
-Character::Character(float x, float y, const std::string& texturePath)
-    : posX(x), posY(y), texturePath(texturePath) {}
-
-float Character::getX() const
-{
-    return posX;
+// Constructor que recibe la textura y la establece en el sprite
+Character::Character(const sf::Texture& texture) {
+    sprite.setTexture(texture);
 }
 
-float Character::getY() const
-{
-    return posY;
+// Establecer la posición del personaje
+void Character::setPosition(float x, float y) {
+    sprite.setPosition(x, y);
 }
 
-void Character::setPosition(float x, float y)
-{
-    posX = x;
-    posY = y;
+// Obtener la posición del personaje
+sf::Vector2f Character::getPosition() const {
+    return sprite.getPosition();
 }
 
-const std::string& Character::getTexturePath() const
-{
-    return texturePath;
+// Obtener los límites del sprite para la colisión
+sf::FloatRect Character::getGlobalBounds() const {
+    return sprite.getGlobalBounds();
 }
 
-void Character::setTexturePath(const std::string& texturePath)
-{
-    this->texturePath = texturePath;
+// Método para dibujar el sprite
+void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    target.draw(sprite, states);
+}
+
+sf::Sprite& Character::getSprite() {
+    return sprite;  // Devolver la referencia al sprite
 }

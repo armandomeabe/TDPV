@@ -3,48 +3,47 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <stdexcept>
-#include <cstdlib>
 #include <ctime>
+#include <stdexcept>
+#include <sstream>
 #include "Enemy.h"
 #include "Innocent.h"
 
 class GameManager
 {
 public:
-    // Constructor
     GameManager(sf::RenderWindow* app);
 
-    // Iniciar el juego
     void Start();
 
 private:
-    sf::RenderWindow* App;             // Ventana de renderizado
-    sf::Texture BackgroundTexture;     // Textura para el fondo
-    sf::Sprite BackgroundSprite;       // Sprite para el fondo
+    sf::Text timeText;  // Texto para mostrar el tiempo
+    sf::Clock timer;    // Reloj para medir el tiempo
 
-    std::vector<Enemy> enemies;        // Vector de enemigos
-    std::vector<Innocent> innocents;   // Vector de inocentes
+    sf::RenderWindow* App;
+    sf::Texture BackgroundTexture;
+    sf::Sprite BackgroundSprite;
 
-    sf::Texture enemyTexture;          // Textura para los enemigos
-    sf::Texture innocentTexture;       // Textura para los inocentes
+    sf::Texture enemyTexture;
+    sf::Texture innocentTexture;
 
-    sf::Clock timer;                   // Reloj para controlar el tiempo transcurrido
+    sf::Font font;
+    sf::Text scoreText;
+    sf::Text livesText;
 
-    // Manejar los eventos (teclado, mouse, etc.)
+    int score;
+    int lives;
+
+    std::vector<Enemy> enemies;
+    std::vector<Innocent> innocents;
+
     void HandleEvents();
-
-    // Actualizar el juego
     void Update();
-
-    // Escalar el fondo para ocupar toda la ventana
     void ScaleBackground();
-
-    // Generar personajes
     void GenerateCharacters();
-
-    // Actualizar y dibujar personajes
     void UpdateAndDrawCharacters();
+    void UpdateText();
+    void CheckClick(const sf::Vector2f& clickPosition);
 };
 
 #endif // GAMEMANAGER_H

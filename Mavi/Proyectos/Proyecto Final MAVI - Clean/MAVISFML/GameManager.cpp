@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager(sf::RenderWindow* app) : App(app)
+GameManager::GameManager(sf::RenderWindow* app) : App(app), lives(3), score(0)
 {
     // Cargar el fondo inicial
     if (!BackgroundTexture.loadFromFile("../Recursos/Assets/bg.jpg"))
@@ -23,16 +23,36 @@ GameManager::GameManager(sf::RenderWindow* app) : App(app)
         throw std::runtime_error("Failed to load Innocent texture.");
     }
 
+    // Cargar fuente
+    if (!font.loadFromFile("../Recursos/Fonts/west.ttf"))
+    {
+        throw std::runtime_error("Failed to load font.");
+    }
+
+    // Configurar textos
+    scoreText.setFont(font);
+    scoreText.setCharacterSize(48);
+    scoreText.setFillColor(sf::Color::Red);
+    scoreText.setPosition(10, 5);
+
+    livesText.setFont(font);
+    livesText.setCharacterSize(48);
+    livesText.setFillColor(sf::Color::Red);
+    livesText.setPosition(10, 60);
+
+    // Configurar texto para el tiempo
+    timeText.setFont(font);
+    timeText.setCharacterSize(48);
+    timeText.setFillColor(sf::Color::Red);
+    timeText.setPosition(10, 115);
+
     // Generar personajes
     GenerateCharacters();
 }
 
 void GameManager::Start()
 {
-    // Reiniciar el temporizador al iniciar
     timer.restart();
-
-    // Bucle principal del juego
     while (App->isOpen())
     {
         HandleEvents();
@@ -49,17 +69,24 @@ void GameManager::HandleEvents()
         {
             App->close();
         }
+        else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+        {
+            sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);
+            CheckClick(clickPosition);
+        }
     }
 }
 
 void GameManager::Update()
 {
-    App->clear();                 // Limpiar la pantalla
-    App->draw(BackgroundSprite);  // Dibujar el fondo
-
-    UpdateAndDrawCharacters();    // Dibujar y actualizar los personajes
-
-    App->display();               // Mostrar en pantalla
+    App->clear();
+    App->draw(BackgroundSprite);
+    UpdateAndDrawCharacters();
+    UpdateText();  // Actualizar los textos (puntaje, vidas y tiempo)
+    App->draw(scoreText);
+    App->draw(livesText);
+    App->draw(timeText);  // Dibujar el tiempo
+    App->display();
 }
 
 void GameManager::ScaleBackground()
@@ -71,64 +98,110 @@ void GameManager::ScaleBackground()
     BackgroundSprite.setScale(scaleX, scaleY);
 }
 
-void GameManager::GenerateCharacters()
-{
+void GameManager::GenerateCharacters() {
     sf::Vector2u windowSize = App->getSize();
     srand(static_cast<unsigned>(time(nullptr)));
 
-    // Generar 4 enemigos
-    for (int i = 0; i < 4; ++i)
-    {
+    // Generar 4 enemigos e inocentes
+    for (int i = 0; i < 50; ++i) {
+        // Generar enemigos
         float x = static_cast<float>(rand() % windowSize.x);
         float y = static_cast<float>(rand() % windowSize.y);
-        enemies.emplace_back(x, y);
-    }
 
-    // Generar 4 inocentes
-    for (int i = 0; i < 4; ++i)
-    {
-        float x = static_cast<float>(rand() % windowSize.x);
-        float y = static_cast<float>(rand() % windowSize.y);
-        innocents.emplace_back(x, y);
+        // Verificar si la posición del enemigo está dentro de los límites de la ventana
+        if (x + enemyTexture.getSize().x * 3.f > windowSize.x) {
+            x = windowSize.x - enemyTexture.getSize().x * 3.f;  // Ajustar posición X
+        }
+        if (y + enemyTexture.getSize().y * 3.f > windowSize.y) {
+            y = windowSize.y - enemyTexture.getSize().y * 3.f;  // Ajustar posición Y
+        }
+
+        enemies.emplace_back(enemyTexture, x, y, 3.f);  // Crear el enemigo con su textura y escala
+
+        // Generar inocentes
+        x = static_cast<float>(rand() % windowSize.x);
+        y = static_cast<float>(rand() % windowSize.y);
+
+        // Verificar si la posición del inocente está dentro de los límites de la ventana
+        if (x + innocentTexture.getSize().x * 3.f > windowSize.x) {
+            x = windowSize.x - innocentTexture.getSize().x * 3.f;  // Ajustar posición X
+        }
+        if (y + innocentTexture.getSize().y * 3.f > windowSize.y) {
+            y = windowSize.y - innocentTexture.getSize().y * 3.f;  // Ajustar posición Y
+        }
+
+        innocents.emplace_back(innocentTexture, x, y, 3.f);  // Crear el inocente con su textura y escala
     }
 }
 
 void GameManager::UpdateAndDrawCharacters()
 {
-    // Verificar si han pasado 5 segundos
     if (timer.getElapsedTime().asSeconds() >= 5.f)
     {
-        // Eliminar el primer enemigo si el vector no está vacío
         if (!enemies.empty())
         {
-            enemies.erase(enemies.begin());
+            enemies.erase(enemies.begin());  // Eliminar el primer enemigo
+            score -= 10;  // Restar puntos por no disparar al enemigo
+            lives -= 1;   // Perder una vida
         }
 
-        // Eliminar el primer inocente si el vector no está vacío
         if (!innocents.empty())
         {
-            innocents.erase(innocents.begin());
+            innocents.erase(innocents.begin());  // Eliminar el primer inocente
         }
 
-        // Reiniciar el temporizador
         timer.restart();
     }
 
-    // Dibujar solo el primer enemigo
+    // Dibujar al primer enemigo
     if (!enemies.empty())
     {
-        sf::Sprite sprite;
-        sprite.setTexture(enemyTexture);
-        sprite.setPosition(enemies.front().getX(), enemies.front().getY());
-        App->draw(sprite);
+        App->draw(enemies.front());
     }
 
-    // Dibujar solo el primer inocente
+    // Dibujar al primer inocente
     if (!innocents.empty())
     {
-        sf::Sprite sprite;
-        sprite.setTexture(innocentTexture);
-        sprite.setPosition(innocents.front().getX(), innocents.front().getY());
-        App->draw(sprite);
+        App->draw(innocents.front());
+    }
+
+    if (lives < 0)
+    {
+        App->close();
+    }
+}
+
+void GameManager::UpdateText()
+{
+    // Actualizar el puntaje
+    std::ostringstream scoreStream;
+    scoreStream << "Puntaje: " << score;
+    scoreText.setString(scoreStream.str());
+
+    // Actualizar las vidas
+    std::ostringstream livesStream;
+    livesStream << "Vidas: " << lives;
+    livesText.setString(livesStream.str());
+
+    // Actualizar el tiempo
+    std::ostringstream timeStream;
+    timeStream << "Tiempo: " << static_cast<int>(timer.getElapsedTime().asSeconds());
+    timeText.setString(timeStream.str());
+}
+
+void GameManager::CheckClick(const sf::Vector2f& clickPosition)
+{
+    // Verificar si se hace clic en el primer enemigo
+    if (!enemies.empty() && enemies.front().getGlobalBounds().contains(clickPosition))
+    {
+        score += 10;
+        enemies.erase(enemies.begin());
+    }
+    // Verificar si se hace clic en el primer inocente
+    else if (!innocents.empty() && innocents.front().getGlobalBounds().contains(clickPosition))
+    {
+        score -= 50;
+        lives -= 1;
+        innocents.erase(innocents.begin());
     }
 }
