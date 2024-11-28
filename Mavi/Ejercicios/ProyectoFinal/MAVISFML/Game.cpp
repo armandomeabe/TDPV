@@ -29,6 +29,9 @@ void Game::initializeGameObjects()
     enemies.clear();
     innocents.clear();
     for (int i = 0; i < 4; ++i) {
+        /* La función emplace_back es un miembro de la clase std::vector en la biblioteca estándar de C++.
+        Está implementada en el archivo de cabecera <vector>. emplace_back permite construir un nuevo elemento
+        directamente en el lugar al final del vector, utilizando los argumentos proporcionados para llamar al constructor del elemento. (Explicación de la IA) */
         enemies.emplace_back(enemyTexture, sf::Vector2f(100.f * i, 200.f));
         innocents.emplace_back(innocentTexture, sf::Vector2f(100.f * i, 100.f));
     }
@@ -99,7 +102,7 @@ void Game::update(sf::Time deltaTime)
     crosshair.updatePosition(window);
 
     if (lives <= 0 && !isMenuActive) {
-        sf::sleep(sf::seconds(2)); // Ejemplo de un delay antes de volver al menú
+        sf::sleep(sf::seconds(2)); // delay antes de volver al menú, para contemplar la derrota jaja
         isMenuActive = true;
     }
 

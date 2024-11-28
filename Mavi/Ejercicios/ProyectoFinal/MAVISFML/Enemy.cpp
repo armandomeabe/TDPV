@@ -2,6 +2,7 @@
 
 Enemy::Enemy(const sf::Texture& texture, sf::Vector2f position)
     : Character(texture, Character::defaultSize) { 
+    sprite.setScale(sf::Vector2f(.4,.4));
     sprite.setPosition(position);
 }
 
