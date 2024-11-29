@@ -2,31 +2,39 @@
 #define GAMEMANAGER_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 #include <ctime>
 #include <stdexcept>
 #include <sstream>
 #include "Enemy.h"
 #include "Innocent.h"
+#include "BulletHole.h"  // Incluir la clase BulletHole
+
 
 class GameManager
 {
 public:
     GameManager(sf::RenderWindow* app);
-
     void Start();
-
+    void ShowWinScreen();
+    void ShowLoseScreen();
 private:
     int enemyCount;
     int innocentCount;
 
     sf::RenderWindow* App;
 
+    // Sonidos
+    sf::SoundBuffer shotBuffer;
+    sf::Sound shotSound;
+
     // Texturas y sprites
     sf::Texture BackgroundTexture;
     sf::Sprite BackgroundSprite;
     sf::Texture enemyTexture;
     sf::Texture innocentTexture;
+    sf::Texture bulletHoleTexture;  // Textura para el agujero de bala
 
     // Textos y fuentes
     sf::Font font;
@@ -46,9 +54,10 @@ private:
     // Coordenadas posibles para generar personajes
     std::vector<sf::Vector2f> PossibleCoordinates;
 
-    // Listas de personajes
+    // Listas de personajes y otros
     std::vector<Enemy> enemies;
     std::vector<Innocent> innocents;
+    std::vector<BulletHole> bulletHoles; // Contenedor de los agujeros de bala
 
     // Métodos principales
     void HandleEvents();
