@@ -75,7 +75,6 @@ void GameManager::Start()
 	}
 }
 
-
 void GameManager::HandleEvents()
 {
 	sf::Event event;
