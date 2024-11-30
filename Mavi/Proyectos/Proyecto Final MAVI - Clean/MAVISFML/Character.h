@@ -3,22 +3,26 @@
 
 #include <SFML/Graphics.hpp>
 
+
+/// <summary>
+/// Es la clase base para enemigos e inocentes. No deberá ser instanciada (clase abstracta).
+/// </summary>
 class Character : public sf::Drawable {
 public:
-    // Constructor que recibe la textura
+    // Constructor que recibe textura
     Character(const sf::Texture& texture, float lifeTime);
 
-    // Establecer la posición
+    // Establecer la posición del personaje
     void setPosition(float x, float y);
 
     // Obtener la posición del personaje
     sf::Vector2f getPosition() const;
 
-    // Obtener los límites del sprite para la colisión
+    // Obtener los límites del sprite para la colisión con las balas
     sf::FloatRect getGlobalBounds() const;
 
-    // Método para obtener el sprite por referencia (no copia)
-    sf::Sprite& getSprite();  // Cambiar a referencia
+    // Obtener el sprite por referencia (no copia)
+    sf::Sprite& getSprite();
 
     // Para registrar el paso del tiempo
     void Update(float deltaTime);
@@ -31,7 +35,7 @@ protected:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    sf::Sprite sprite;  // El sprite del personaje
+    sf::Sprite sprite;
     float elapsedTime;
     float lifeTime;
 };

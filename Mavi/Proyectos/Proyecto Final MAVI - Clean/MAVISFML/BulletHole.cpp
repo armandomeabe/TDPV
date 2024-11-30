@@ -21,8 +21,7 @@ bool BulletHole::IsExpired() const
     return elapsedTime >= lifetTime;
 }
 
-// Implementación del método draw
 void BulletHole::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    target.draw(bulletHoleSprite, states);  // Dibuja el sprite en la pantalla
+    target.draw(bulletHoleSprite, states);
 }

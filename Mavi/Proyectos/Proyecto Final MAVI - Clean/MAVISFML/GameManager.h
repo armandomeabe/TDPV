@@ -9,8 +9,9 @@
 #include <sstream>
 #include "Enemy.h"
 #include "Innocent.h"
-#include "BulletHole.h"  // Incluir la clase BulletHole
-
+#include "BulletHole.h"
+#include "Crosshair.h"
+#include "Includes.h"
 
 class GameManager
 {
@@ -19,24 +20,30 @@ public:
     void Start();
     void ShowWinScreen();
     void ShowLoseScreen();
+    void ShowIntroScreen();
+
 private:
     int enemyCount;
     int innocentCount;
 
+    Crosshair crosshair;
+
     sf::RenderWindow* App;
 
-    float elapsedTime; // Inicialización a un valor imposible (antes del primer segundo)
+    float elapsedTime;
 
     // Sonidos
     sf::SoundBuffer shotBuffer;
     sf::Sound shotSound;
 
     // Texturas y sprites
+    // conforme el proyecto fue creciendo me di cuenta que cada textura debería ser responsabilidad de su propia clase.
+    // migré la textura de Crosshair a la clase misma. TO-DO: Hacer lo mismo con enemigos e inocentes.
     sf::Texture BackgroundTexture;
     sf::Sprite BackgroundSprite;
     sf::Texture enemyTexture;
     sf::Texture innocentTexture;
-    sf::Texture bulletHoleTexture;  // Textura para el agujero de bala
+    sf::Texture bulletHoleTexture;
 
     // Textos y fuentes
     sf::Font font;
@@ -50,23 +57,22 @@ private:
 
     // Control de tiempo
     sf::Clock timer;         // Para intervalos entre eventos
-    sf::Clock updateClock;   // Para actualizaciones dinámicas (cada 5 segundos)
+    sf::Clock updateClock;   // Para actualizaciones cada 5 segundos
     sf::Clock gameTimeClock; // Para medir el tiempo total de juego
 
-    // Coordenadas posibles para generar personajes
+    // Coordenadas posibles para generar personajes, es un vector de pares (x,y). TO-DO: Investigar tuplas.
     std::vector<sf::Vector2f> PossibleCoordinates;
 
     // Listas de personajes y otros
     std::vector<Enemy> enemies;
     std::vector<Innocent> innocents;
-    std::vector<BulletHole> bulletHoles; // Contenedor de los agujeros de bala
+    std::vector<BulletHole> bulletHoles;
 
     // Métodos principales
     void HandleEvents();
     void Update();
     void ScaleBackground();
-    void GenerateCharacters();           // Mantener este si necesitas el método general
-    void GenerateCharacter(bool isEnemy); // Método para generar personajes individuales
+    void GenerateCharacters();
     void UpdateAndDrawCharacters();
     void UpdateText();
     void CheckClick(const sf::Vector2f& clickPosition);

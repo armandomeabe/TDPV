@@ -12,13 +12,12 @@ public:
     bool IsExpired() const;
 
 protected:
-    // Método de dibujo que SFML llamará
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
     sf::Sprite bulletHoleSprite;
     float elapsedTime = 0.f;
-    float lifetTime = 2.f;  // Tiempo de vida del agujero de bala
+    float lifetTime = 2.f;
 };
 
 #endif
