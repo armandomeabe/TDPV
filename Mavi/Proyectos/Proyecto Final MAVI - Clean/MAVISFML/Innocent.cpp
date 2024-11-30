@@ -1,7 +1,7 @@
 #include "Innocent.h"
 
 // Constructor que pasa la textura a la clase base (Character) y recibe la posición y la escala
-Innocent::Innocent(const sf::Texture& texture, float x, float y, float scale) : Character(texture) {
+Innocent::Innocent(const sf::Texture& texture, float x, float y, float scale) : Character(texture, 5) {
     setPosition(x, y);  // Establecer la posición
     getSprite().setScale(scale, scale);  // Establecer la escala
 }

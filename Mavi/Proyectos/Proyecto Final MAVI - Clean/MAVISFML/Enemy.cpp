@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 // Constructor que pasa la textura a la clase base (Character) y recibe la posición y la escala
-Enemy::Enemy(const sf::Texture& texture, float x, float y, float scale) : Character(texture) {
+Enemy::Enemy(const sf::Texture& texture, float x, float y, float scale) : Character(texture, 5) {
     setPosition(x, y);  // Establecer la posición
     getSprite().setScale(scale, scale);  // Establecer la escala
 }

@@ -25,6 +25,8 @@ private:
 
     sf::RenderWindow* App;
 
+    float elapsedTime; // Inicialización a un valor imposible (antes del primer segundo)
+
     // Sonidos
     sf::SoundBuffer shotBuffer;
     sf::Sound shotSound;

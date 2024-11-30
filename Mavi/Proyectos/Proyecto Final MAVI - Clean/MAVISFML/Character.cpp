@@ -1,7 +1,9 @@
 #include "Character.h"
 
 // Constructor que recibe la textura y la establece en el sprite
-Character::Character(const sf::Texture& texture) {
+Character::Character(const sf::Texture& texture, float lifeTime) {
+    this->lifeTime = lifeTime;
+    elapsedTime = 0;
     sprite.setTexture(texture);
 }
 
@@ -27,4 +29,14 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 sf::Sprite& Character::getSprite() {
     return sprite;  // Devolver la referencia al sprite
+}
+
+void Character::Update(float deltaTime)
+{
+    elapsedTime += deltaTime;
+}
+
+bool Character::IsExpired() const
+{
+    return elapsedTime >= lifeTime;
 }

@@ -13,12 +13,12 @@ BulletHole::BulletHole(sf::Texture& texture, const sf::Vector2f& position)
 
 void BulletHole::Update(float deltaTime)
 {
-    m_elapsedTime += deltaTime;
+    elapsedTime += deltaTime;
 }
 
 bool BulletHole::IsExpired() const
 {
-    return m_elapsedTime >= m_lifetime;
+    return elapsedTime >= lifetTime;
 }
 
 // Implementación del método draw

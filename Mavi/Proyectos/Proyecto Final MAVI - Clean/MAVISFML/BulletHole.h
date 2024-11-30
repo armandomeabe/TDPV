@@ -17,8 +17,8 @@ protected:
 
 private:
     sf::Sprite bulletHoleSprite;
-    float m_elapsedTime = 0.f;
-    float m_lifetime = 2.f;  // Tiempo de vida del agujero de bala
+    float elapsedTime = 0.f;
+    float lifetTime = 2.f;  // Tiempo de vida del agujero de bala
 };
 
 #endif

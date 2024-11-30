@@ -1,9 +1,7 @@
 #include "Includes.h"
 #include "GameManager.h"
 
-// GameManager.cpp
-
-GameManager::GameManager(sf::RenderWindow* app) : App(app), lives(3), score(0), enemyCount(50), innocentCount(50)
+GameManager::GameManager(sf::RenderWindow* app) : App(app), lives(3), score(0), enemyCount(50), innocentCount(50), elapsedTime(0)
 {
 	// Sonido de disparo
 	if (!shotBuffer.loadFromFile("../Recursos/Assets/GUNAuto_Shot beretta m12 9 mm (ID 0437)_BSB.ogg"))
@@ -44,25 +42,23 @@ GameManager::GameManager(sf::RenderWindow* app) : App(app), lives(3), score(0), 
 	{
 		throw std::runtime_error("Failed to load font.");
 	}
-
-	int x_offset = 150;
-
+	
 	// Configurar textos
 	scoreText.setFont(font);
 	scoreText.setCharacterSize(72);
 	scoreText.setFillColor(sf::Color::Red);
-	scoreText.setPosition(x_offset + 10, 850);
+	scoreText.setPosition(100, 850);
 
 	livesText.setFont(font);
 	livesText.setCharacterSize(72);
 	livesText.setFillColor(sf::Color::Red);
-	livesText.setPosition(x_offset + 350, 850);
+	livesText.setPosition(500, 850);
 
 	// Configurar texto para el tiempo
 	timeText.setFont(font);
 	timeText.setCharacterSize(72);
 	timeText.setFillColor(sf::Color::Red);
-	timeText.setPosition(x_offset + 650, 850);
+	timeText.setPosition(800, 850);
 
 	// Generar personajes
 	GenerateCharacters();
@@ -122,8 +118,25 @@ void GameManager::Update()
 		ShowWinScreen();
 	}
 
-	// Actualizar los agujeros de bala
+	// Cuánto tiempo pasó
 	float deltaTime = updateClock.restart().asSeconds();
+
+	// Actualizar los enemigos y los inocentes en caso de que ya hayan transcurrido 5 segundos
+	auto& innocent = innocents.front(); // escribir "auto" es casi tanto trabajo como escribir el nombre de la variable, me encantaría que fuera var como C#
+	innocent.Update(deltaTime);
+	if (innocent.IsExpired())
+	{
+		innocents.erase(innocents.begin());
+	}
+
+	auto& enemy = enemies.front();
+	enemy.Update(deltaTime);
+	if (enemy.IsExpired())
+	{
+		enemies.erase(enemies.begin());
+	}
+
+	// Actualizar los agujeros de bala
 	for (auto it = bulletHoles.begin(); it != bulletHoles.end();)
 	{
 		it->Update(deltaTime); // Actualizar el tiempo de vida del agujero de bala
@@ -272,32 +285,6 @@ void GameManager::GenerateCharacters()
 
 void GameManager::UpdateAndDrawCharacters()
 {
-	if (updateClock.getElapsedTime().asSeconds() >= 5.f)
-	{
-		// Eliminar un enemigo si existe
-		if (!enemies.empty())
-		{
-			enemies.erase(enemies.begin());
-			score -= 10;  // Restar puntos por no disparar al enemigo
-			lives -= 1;   // Perder una vida
-		}
-
-		// Eliminar un inocente si existe
-		if (!innocents.empty())
-		{
-			innocents.erase(innocents.begin());
-		}
-
-		// Generar un nuevo enemigo y un nuevo inocente
-		if (lives > 0)  // Solo generar si quedan vidas
-		{
-			GenerateCharacter(true);  // Generar un nuevo enemigo
-			GenerateCharacter(false); // Generar un nuevo inocente
-		}
-
-		updateClock.restart();  // Reiniciar el reloj de actualización
-	}
-
 	// Dibujar al primer enemigo
 	if (!enemies.empty())
 	{
