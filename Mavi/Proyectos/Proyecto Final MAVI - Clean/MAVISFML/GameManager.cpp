@@ -89,14 +89,17 @@ void GameManager::HandleEvents()
 		{
 			shotSound.play();  // Reproducir el sonido del disparo
 
-			sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);
-
 			// Escribir las coordenadas del clic en la consola
 			std::cout << "Clic detectado en: ("
 				<< event.mouseButton.x << ", "
 				<< event.mouseButton.y << ")"
 				<< std::endl;
 
+			// Generar un desplazamiento aleatorio entre -30 y 30 para X y Y
+			float offsetX = (std::rand() % 61 - 30);  // Rango entre -30 y 30 ¿por qué 61-30? ni la menor idea pero funciona: https://stackoverflow.com/questions/12657962/how-do-i-generate-a-random-number-between-two-variables-that-i-have-stored
+			float offsetY = (std::rand() % 61 - 30);
+
+			sf::Vector2f clickPosition(event.mouseButton.x + offsetX, event.mouseButton.y + offsetY);
 			CheckClick(clickPosition);
 		}
 	}
