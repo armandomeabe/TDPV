@@ -48,7 +48,7 @@ void BaseObject::Update(float dt) {
 
     // Resetear la aceleración después de cada actualización
     // El 100 es porque las cosas se van acelerando conforme se alejan, se hace mas divertido
-    _acceleration = sf::Vector2f(100.0f, 100.0f);
+    // _acceleration = sf::Vector2f(100.0f, 100.0f);
 }
 
 void BaseObject::SetScale(float uniformScale) {

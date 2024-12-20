@@ -29,10 +29,9 @@ void Game::HandleEvents() {
 
 		// Disparo al presionar el botón izquierdo del mouse
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-			// Crear una bala con un radio, posición inicial y parámetros específicos
-			Bullet bullet(5.0f, sf::Vector2f(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)));
-			bullet.SetVelocity(sf::Vector2f(0, -300)); // Velocidad inicial hacia arriba
 			bullets.push_back(std::make_unique<Bullet>(5.0f, sf::Vector2f(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))));
+			(*bullets.back()).SetPosition(sf::Vector2f(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)));
+
 		}
 	}
 }
@@ -49,24 +48,31 @@ void Game::Update(float dt) {
 
 	// Actualizar enemigos
 	for (auto& enemy : enemies) {
-		enemy->Update(dt);
-
-		// Eliminar enemigos que salen de pantalla
-		sf::Vector2f pos = enemy->GetPosition();
-		if (pos.y > window.getSize().y || pos.x > window.getSize().x || pos.x < -100.0f) {
-			enemy.reset();
+		if (enemy) {
+			enemy->Update(dt);
+			sf::Vector2f pos = enemy->GetPosition();
+			if (pos.y > window.getSize().y || pos.x > window.getSize().x || pos.x < -100.0f) {
+				enemy.reset();
+			}
 		}
 	}
-
 	enemies.erase(std::remove(enemies.begin(), enemies.end(), nullptr), enemies.end());
 
 	// Actualizar balas
 	for (auto& bullet : bullets) {
 		bullet->Update(dt);
-		//if (bullet->Obso)
 	}
 
-	// Manejo de colisiones entre disparos y enemigos
+	// Este codigo con "remove_if" fue generado por IA y me sirvio para aprender que std tiene mucho mas de lo que siempre use
+	// Sirve para crear punteros y hacer remove_if es decir desde un iterator en el principio y uno en el final (para macarle el rango)
+	// por cada elemento que cumpla la condicion, lo elimina. Asi puedo modificar el mismo vector que estoy tratando de iterar.
+	bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
+		[](const std::unique_ptr<Bullet>& bullet) {
+			return bullet->Obsolete();
+		}),
+		bullets.end());
+
+	// Manejo de colisiones entre balas y enemigos
 	HandleCollisions();
 }
 
@@ -82,7 +88,13 @@ void Game::Render() {
 
 	// Dibujar balas
 	for (const auto& bullet : bullets) {
-		bullet->Draw(&window);  // Usamos el método Draw de BaseObject
+		if (bullet)
+		{
+			bullet->Draw(&window);
+		}
+		//window.draw(bullet.get().get);
+
+		//std::cout << (*bullet).GetPosition().x << std::endl;
 	}
 
 	sf::Text scoreText("Puntaje: " + std::to_string(score), font, 24);
@@ -120,14 +132,12 @@ void Game::SpawnEnemy() {
 	enemies.push_back(std::move(enemy));
 }
 
-
 void Game::HandleCollisions() {
 	for (auto& bullet : bullets) {
 		for (auto& enemy : enemies) {
-			if (enemy) {  // Solo verificar colisiones si el puntero de enemigo es válido, sin este if una vez de cada N enemigos, el juego crashea
+			if (enemy) { // Solo verificar colisiones si el puntero enemigo es válido
 				sf::FloatRect bulletBounds = bullet->getGlobalBounds();
 
-				// Obtener el tamaño de la textura y la escala de la clase BaseObject
 				sf::Vector2f enemySize(
 					static_cast<float>(enemy->GetTextureSize().x),
 					static_cast<float>(enemy->GetTextureSize().y)
@@ -141,14 +151,20 @@ void Game::HandleCollisions() {
 				);
 
 				if (bulletBounds.intersects(enemyBounds)) {
+					// Incrementar el puntaje
 					score += 10;
 
-					// Eliminar enemigo
-					enemy.reset();
+					// Marcar bala como obsoleta
+					//bullet->SetPosition(sf::Vector2f(-100.0f, -100.0f)); // Alejar la bala de la pantalla
+					enemy.reset(); // Eliminar enemigo
+
+					// Si impacta con un ovni, la bala ya se gasta asi que es obsoleta
+					bullet->SetManuallyObsolete();
 				}
 			}
 		}
 	}
 
+	// Limpiar enemigos eliminados
 	enemies.erase(std::remove(enemies.begin(), enemies.end(), nullptr), enemies.end());
 }
