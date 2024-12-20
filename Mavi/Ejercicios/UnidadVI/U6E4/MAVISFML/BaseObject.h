@@ -7,9 +7,8 @@ public:
     BaseObject(const std::string& filename);
     ~BaseObject();
 
-    void Draw(sf::RenderWindow* pWnd);  // Dibujar el objeto
-    //void Update(float dt);  // Actualizar la posición con velocidad y aceleración
-    virtual void Update(float dt);  // Método virtual para actualización
+    void Draw(sf::RenderWindow* pWnd);
+    virtual void Update(float dt);
 
     void SetScale(float uniformScale);
     void SetPosition(sf::Vector2f pos);
@@ -32,9 +31,4 @@ private:
     sf::Vector2f _position;
     sf::Vector2f _velocity;
     sf::Vector2f _acceleration;
-
-    //sf::Sprite sprite;
-    //sf::Texture texture;
-    //sf::Vector2f velocity;
-    //sf::Vector2f acceleration;
 };

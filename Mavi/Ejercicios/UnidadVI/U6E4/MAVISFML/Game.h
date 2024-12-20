@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include "BaseObject.h"
+#include "Bullet.h"
 
 class Game {
 public:
@@ -19,7 +20,7 @@ private:
     sf::Font font;
     sf::RenderWindow window;
     std::vector<std::unique_ptr<BaseObject>> enemies;
-    std::vector<std::unique_ptr<BaseObject>> bullets;
+    std::vector<std::unique_ptr<Bullet>> bullets;
     float spawnTimer;
     float spawnInterval;
     int score;
