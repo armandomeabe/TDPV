@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 #include "BaseObject.h"
-
-using namespace sf;
 
 class Game {
 public:
@@ -10,12 +10,17 @@ public:
     void Run();
 
 private:
-    RenderWindow window;
-    BaseObject ball;
-    float gravity;
-    float bounceFactor;
-
-    void ProcessEvents();
+    void HandleEvents();
     void Update(float dt);
     void Render();
+    void SpawnEnemy();
+    void HandleCollisions();
+
+    sf::Font font;
+    sf::RenderWindow window;
+    std::vector<std::unique_ptr<BaseObject>> enemies;
+    std::vector<std::unique_ptr<BaseObject>> bullets;
+    float spawnTimer;
+    float spawnInterval;
+    int score;
 };

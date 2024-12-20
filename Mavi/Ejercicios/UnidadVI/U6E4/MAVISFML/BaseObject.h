@@ -2,38 +2,39 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-using namespace std;
-using namespace sf;
-
 class BaseObject {
 public:
-    BaseObject(string filename);
+    BaseObject(const std::string& filename);
     ~BaseObject();
 
-    void Draw(RenderWindow* pWnd);
-    void Update(float dt);
+    void Draw(sf::RenderWindow* pWnd);  // Dibujar el objeto
+    //void Update(float dt);  // Actualizar la posición con velocidad y aceleración
+    virtual void Update(float dt);  // Método virtual para actualización
 
-    void SetScale(float uniformScale) { _sprite->setScale(uniformScale, uniformScale); }
-    void SetPosition(Vector2f pos) { _position = pos; }
-    void SetAcceleration(Vector2f acc) { _acceleration = acc; }
-    void SetVelocity(Vector2f vel) { _velocity = vel; }
+    void SetScale(float uniformScale);
+    void SetPosition(sf::Vector2f pos);
+    void SetVelocity(sf::Vector2f vel);
+    void SetAcceleration(sf::Vector2f acc);
 
-    Vector2f GetPosition() const { return _position; }
-    Vector2f GetAcceleration() const { return _acceleration; }
-    Vector2f GetVelocity() const { return _velocity; }
-    sf::Vector2f GetScale() const { return _sprite->getScale(); }
-    sf::Vector2u GetTextureSize() const { return _text->getSize(); }
+    sf::Vector2f GetPosition() const;
+    sf::Vector2f GetVelocity() const;
+    sf::Vector2f GetAcceleration() const;
 
-    void AddAcceleration(Vector2f acc) {
-        _acceleration.x += acc.x;
-        _acceleration.y += acc.y;
-    }
+    sf::Vector2u GetTextureSize() const;
+    float GetScale() const;
+
+    sf::FloatRect getGlobalBounds() const;
 
 private:
-    Sprite* _sprite;
-    Texture* _text;
+    sf::Sprite* _sprite = nullptr;
+    sf::Texture* _texture = nullptr;
 
-    Vector2f _position;
-    Vector2f _acceleration;
-    Vector2f _velocity;
+    sf::Vector2f _position;
+    sf::Vector2f _velocity;
+    sf::Vector2f _acceleration;
+
+    //sf::Sprite sprite;
+    //sf::Texture texture;
+    //sf::Vector2f velocity;
+    //sf::Vector2f acceleration;
 };
